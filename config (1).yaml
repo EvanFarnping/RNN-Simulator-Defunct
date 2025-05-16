@@ -1,0 +1,86 @@
+# ─────────────────────────────────────────────────────────
+# REGION DEFINITIONS  (size + Dale mix)
+# ─────────────────────────────────────────────────────────
+regions:
+  OB:
+    num_neurons: 25          # any positive int
+    inh_frac   : 0.20        # 90 % inhibitory, 10 % excitatory
+  PCx_OB:
+    num_neurons: 5
+    inh_frac   : 0.20
+  PCx_noproj:
+    num_neurons: 15
+    inh_frac   : 0.20
+  PCx_mPFC:
+    num_neurons: 5
+    inh_frac   : 0.20
+  mPFC:
+    num_neurons: 10
+    inh_frac   : 0.20
+
+# ─────────────────────────────────────────────────────────
+# STRUCTURAL CONNECTIVITY MATRIX (0 | 1 | '?')
+# ─────────────────────────────────────────────────────────
+connectivity:                     # rows = source, cols = target
+  OB        : {OB: 1,  PCx_OB: 1,  PCx_noproj: 0,  PCx_mPFC: 0,  mPFC: 0}
+  PCx_OB    : {OB: 1,  PCx_OB: 1,  PCx_noproj: 1,  PCx_mPFC: 1,  mPFC: 0}
+  PCx_noproj: {OB: 1,  PCx_OB: 1,  PCx_noproj: 1,  PCx_mPFC: 1,  mPFC: 0}
+  PCx_mPFC  : {OB: 1,  PCx_OB: 1,  PCx_noproj: 1,  PCx_mPFC: 1,  mPFC: 0}
+  mPFC      : {OB: 0,  PCx_OB: 0,  PCx_noproj: 0,  PCx_mPFC: 1,  mPFC: 1}
+
+# ─────────────────────────────────────────────────────────
+# SIGN-SPECIFIC THINNING  (fraction of OUTGOING synapses that
+#                          land on inh vs. exc targets, per region pair).
+# keys may be "default" or "<src>-><tgt>"
+# rows will auto-distribute if not sum to 1.
+# ─────────────────────────────────────────────────────────
+sign_connectivity:
+  default:            {inh_inh: 0.25, inh_exc: 0.25,
+                       exc_inh: 0.25, exc_exc: 0.25}
+
+  #OB->OB:         {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #OB->PCx_OB:     {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  
+  #PCx_OB->OB:         {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}    
+  #PCx_OB->PCx_OB:     {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_OB->PCx_noproj: {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_OB->PCx_mPFC:   {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_OB->mPFC:       {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  
+  #PCx_noproj->OB:         {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_noproj->PCx_OB:     {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_noproj->PCx_noproj: {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_noproj->PCx_mPFC:   {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_noproj->mPFC:       {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  
+  #PCx_mPFC->OB:         {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_mPFC->PCx_OB:     {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_mPFC->PCx_noproj: {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_mPFC->PCx_mPFC:   {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #PCx_mPFC->mPFC:       {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25} 
+  
+  #mPFC->PCx_mPFC: {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}   
+  #mPFC->mPFC:     {inh_inh: 0.10, inh_exc: 0.25, exc_exc: 0.40, exc_inh: 0.25}  
+  
+
+# ─────────────────────────────────────────────────────────
+# LEARNING-RATE MULTIPLIERS
+# ─────────────────────────────────────────────────────────
+lr_multipliers:
+  weights:
+    OB->OB           : 1.0
+    mPFC->PCx_mPFC   : 1.0
+  bias:
+    OB               : 1.0
+    mPFC             : 1.0
+    
+
+# ─────────────────────────────────────────────────────────
+# Ta
+# ─────────────────────────────────────────────────────────
+cell_dynamics:
+  tau: 50
+  dt : 1.0          
+io:
+  input_size : 4   
+  output_size: 1
